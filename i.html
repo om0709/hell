@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeito App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6a0dad 0%, #d64e91 100%);
+            color: #fff;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #6a0dad;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+
+        .sidebar button {
+            display: block;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .sidebar button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 10px 0;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .sidebar h2 {
+                font-size: 1.3rem;
+            }
+
+            .sidebar button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Makeito</h2>
+        <button onclick="showCustomerFlow()">Customer Flow</button>
+        <button onclick="showWelderFlow()">Welder Flow</button>
+        <button onclick="showOrders()">Orders</button>
+        <button onclick="showProfile()">Profile</button>
+    </div>
+    <div class="content">
+        <div class="header">
+            <h1>Welcome to Makeito</h1>
+            <i class="fas fa-user-circle" style="font-size: 30px;"></i>
+        </div>
+        <div id="errorMessage" class="error"></div>
+        <div id="mainContent">
+            <div class="card">
+                <h2>Select Your Role</h2>
+                <button onclick="showCustomerFlow()">Continue as Customer</button>
+                <button onclick="showWelderFlow()">Continue as Welder</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Makeito. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function showCustomerFlow() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Customer Login</h2>
+                    <input type="text" placeholder="Email" id="customerEmail">
+                    <input type="password" placeholder="Password" id="customerPassword">
+                    <button onclick="loginAsCustomer()">Login</button>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function loginAsCustomer() {
+            const email = document.getElementById("customerEmail").value;
+            const password = document.getElementById("customerPassword").value;
+            if (email && password) {
+                showMaterialSelection();
+            } else {
+                showError("Please fill in all fields.");
+            }
+        }
+
+        function showMaterialSelection() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Select Material</h2>
+                    <button onclick="showObjectTypeSelection('metal')">Metal</button>
+                    <button onclick="showObjectTypeSelection('wood')">Wood</button>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function showObjectTypeSelection(material) {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Object Type</h2>
+                    <button onclick="showImaginaryObjectPath()">Imaginary Object</button>
+                    <button onclick="showRealObjectPath()">Real Object</button>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function showImaginaryObjectPath() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Create Imaginary Object</h2>
+                    <input type="text" placeholder="Describe your imaginary object" id="imaginaryDescription">
+                    <button onclick="generateDesign()">Generate Design</button>
+                    <button onclick="goBack()">Back</button>
+                    <img id="generatedImage" class="hidden" alt="Generated Design">
+                </div>
+            `;
+        }
+
+        function generateDesign() {
+            const description = document.getElementById("imaginaryDescription").value;
+            if (description) {
+                const imgElement = document.getElementById("generatedImage");
+                imgElement.src = `https://via.placeholder.com/400?text=${encodeURIComponent(description)}`;
+                imgElement.classList.remove("hidden");
+            } else {
+                showError("Please provide a description.");
+            }
+        }
+
+        function showRealObjectPath() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Upload Real Object Image</h2>
+                    <input type="file" id="realObjectImage">
+                    <button onclick="uploadImage()">Upload Image</button>
+                    <button onclick="goBack()">Back</button>
+                    <img id="uploadedImage" class="hidden" alt="Uploaded Object">
+                </div>
+            `;
+        }
+
+        function uploadImage() {
+            const imageInput = document.getElementById("realObjectImage");
+            const uploadedImage = document.getElementById("uploadedImage");
+            if (imageInput.files.length > 0) {
+                const file = imageInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                showError("Please upload an image.");
+            }
+        }
+
+        function showWelderFlow() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Welder Registration</h2>
+                    <input type="text" placeholder="Shop Name" id="shopName">
+                    <input type="text" placeholder="Material Type" id="materialType">
+                    <input type="text" placeholder="Business Type" id="businessType">
+                    <button onclick="registerShop()">Register Shop</button>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function registerShop() {
+            const shopName = document.getElementById("shopName").value;
+            const materialType = document.getElementById("materialType").value;
+            const businessType = document.getElementById("businessType").value;
+            if (shopName && businessType) {
+                alert("Shop Registered Successfully!");
+            } else {
+                showError("Please fill in all fields.");
+            }
+        }
+
+        function showOrders() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Your Orders</h2>
+                    <p>No orders yet!</p>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function showProfile() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Your Profile</h2>
+                    <p>Profile details here.</p>
+                    <button onclick="goBack()">Back</button>
+                </div>
+            `;
+        }
+
+        function goBack() {
+            const mainContent = document.getElementById("mainContent");
+            mainContent.innerHTML = `
+                <div class="card">
+                    <h2>Select Your Role</h2>
+                    <button onclick="showCustomerFlow()">Continue as Customer</button>
+                    <button onclick="showWelderFlow()">Continue as Welder</button>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.innerText = message;
+        }
+    </script>
+</body>
+
+</html>
